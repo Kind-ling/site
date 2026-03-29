@@ -419,12 +419,15 @@
       transform-origin: bottom center;
       transform-box: fill-box;
     }
-    .kindling-bar-1 { animation: kindling-grow 600ms cubic-bezier(0.2,0.8,0.2,1) 0ms both; }
-    .kindling-bar-2 { animation: kindling-grow 600ms cubic-bezier(0.2,0.8,0.2,1) 100ms both; }
-    .kindling-bar-3 { animation: kindling-grow 600ms cubic-bezier(0.2,0.8,0.2,1) 200ms both; }
+    .kindling-bar-1 { animation: kindling-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) 0ms infinite; }
+    .kindling-bar-2 { animation: kindling-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) -3867ms infinite; }
+    .kindling-bar-3 { animation: kindling-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) -3733ms infinite; }
     @keyframes kindling-grow {
-      from { transform: scaleY(0); }
-      to   { transform: scaleY(1); }
+      0%   { transform: scaleY(0); }
+      15%  { transform: scaleY(1); }
+      80%  { transform: scaleY(1); }
+      95%  { transform: scaleY(0); }
+      100% { transform: scaleY(0); }
     }
 
     /* Twig — breathing loop */
@@ -447,17 +450,23 @@
       transform-origin: bottom center;
       transform-box: fill-box;
     }
-    .heat-bar-1 { animation: heat-grow 800ms cubic-bezier(0.2,0.8,0.2,1) 0ms both; }
-    .heat-bar-2 { animation: heat-grow 800ms cubic-bezier(0.2,0.8,0.2,1) 150ms both; }
-    .heat-bar-3 { animation: heat-overshoot 800ms cubic-bezier(0.2,0.8,0.2,1) 300ms both; }
+    .heat-bar-1 { animation: heat-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) 0ms infinite; }
+    .heat-bar-2 { animation: heat-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) -3963ms infinite; }
+    .heat-bar-3 { animation: heat-overshoot 4000ms cubic-bezier(0.2,0.8,0.2,1) -3925ms infinite; }
     @keyframes heat-grow {
-      from { transform: scaleY(0); }
-      to   { transform: scaleY(1); }
+      0%   { transform: scaleY(0); }
+      20%  { transform: scaleY(1); }
+      75%  { transform: scaleY(1); }
+      95%  { transform: scaleY(0); }
+      100% { transform: scaleY(0); }
     }
     @keyframes heat-overshoot {
-      from  { transform: scaleY(0); }
-      85%   { transform: scaleY(1.14); }
-      100%  { transform: scaleY(1); }
+      0%   { transform: scaleY(0); }
+      17%  { transform: scaleY(1.14); }
+      22%  { transform: scaleY(1); }
+      75%  { transform: scaleY(1); }
+      95%  { transform: scaleY(0); }
+      100% { transform: scaleY(0); }
     }
 
     /* Flint — spark event */
@@ -466,12 +475,23 @@
       transform-origin: bottom center;
       transform-box: fill-box;
     }
-    .flint-bar-1 { animation: flint-snap 300ms cubic-bezier(0.8,0,1,1) 0ms both; }
-    .flint-bar-2 { animation: flint-snap 300ms cubic-bezier(0.8,0,1,1) 40ms both; }
-    .flint-bar-3 { animation: flint-snap 300ms cubic-bezier(0.8,0,1,1) 80ms both; }
+    .flint-bar-1 { animation: flint-snap 3000ms cubic-bezier(0.8,0,1,1) 0ms infinite; }
+    .flint-bar-2 { animation: flint-snap 3000ms cubic-bezier(0.8,0,1,1) -2987ms infinite; }
+    .flint-bar-3 { animation: flint-spark 3000ms cubic-bezier(0.8,0,1,1) -2973ms infinite; }
     @keyframes flint-snap {
-      from { transform: scaleY(0); }
-      to   { transform: scaleY(1); }
+      0%   { transform: scaleY(0); }
+      10%  { transform: scaleY(1); }
+      70%  { transform: scaleY(1); }
+      80%  { transform: scaleY(0); }
+      100% { transform: scaleY(0); }
+    }
+    @keyframes flint-spark {
+      0%   { transform: scaleY(0); }
+      8%   { transform: scaleY(1.08); }
+      12%  { transform: scaleY(1); }
+      70%  { transform: scaleY(1); }
+      80%  { transform: scaleY(0); }
+      100% { transform: scaleY(0); }
     }
 
     /* Igniter — instant deploy */
@@ -482,10 +502,13 @@
     }
     .igniter-bar-1,
     .igniter-bar-2,
-    .igniter-bar-3 { animation: igniter-deploy 200ms linear 0ms both; }
+    .igniter-bar-3 { animation: igniter-deploy 3000ms linear 0ms infinite; }
     @keyframes igniter-deploy {
-      from { transform: scaleY(0); }
-      to   { transform: scaleY(1); }
+      0%   { transform: scaleY(0); }
+      7%   { transform: scaleY(1); }
+      75%  { transform: scaleY(1); }
+      82%  { transform: scaleY(0); }
+      100% { transform: scaleY(0); }
     }
 
     /* ─── End Animated SVG Logo System ─── */
