@@ -411,6 +411,85 @@
     .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
     .footer-bottom a:hover { color: var(--ember); }
 
+    /* ─── Animated SVG Logo System ─── */
+
+    /* Kind-ling (nav/hero/footer) */
+    .kindling-bar {
+      fill: #E8652A;
+      transform-origin: bottom center;
+      transform-box: fill-box;
+    }
+    .kindling-bar-1 { animation: kindling-grow 600ms cubic-bezier(0.2,0.8,0.2,1) 0ms both; }
+    .kindling-bar-2 { animation: kindling-grow 600ms cubic-bezier(0.2,0.8,0.2,1) 100ms both; }
+    .kindling-bar-3 { animation: kindling-grow 600ms cubic-bezier(0.2,0.8,0.2,1) 200ms both; }
+    @keyframes kindling-grow {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
+    }
+
+    /* Twig — breathing loop */
+    .twig-bar {
+      fill: #E8652A;
+      transform-origin: bottom center;
+      transform-box: fill-box;
+    }
+    .twig-bar-1 { animation: twig-breathe 1200ms ease-in-out -400ms infinite; }
+    .twig-bar-2 { animation: twig-breathe 1200ms ease-in-out -200ms infinite; }
+    .twig-bar-3 { animation: twig-breathe 1200ms ease-in-out 0ms infinite; }
+    @keyframes twig-breathe {
+      0%,100% { transform: scaleY(1); }
+      50%      { transform: scaleY(1.15); }
+    }
+
+    /* Heat — accumulation with overshoot on bar3 */
+    .heat-bar {
+      fill: #E8652A;
+      transform-origin: bottom center;
+      transform-box: fill-box;
+    }
+    .heat-bar-1 { animation: heat-grow 800ms cubic-bezier(0.2,0.8,0.2,1) 0ms both; }
+    .heat-bar-2 { animation: heat-grow 800ms cubic-bezier(0.2,0.8,0.2,1) 150ms both; }
+    .heat-bar-3 { animation: heat-overshoot 800ms cubic-bezier(0.2,0.8,0.2,1) 300ms both; }
+    @keyframes heat-grow {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
+    }
+    @keyframes heat-overshoot {
+      from  { transform: scaleY(0); }
+      85%   { transform: scaleY(1.14); }
+      100%  { transform: scaleY(1); }
+    }
+
+    /* Flint — spark event */
+    .flint-bar {
+      fill: #E8652A;
+      transform-origin: bottom center;
+      transform-box: fill-box;
+    }
+    .flint-bar-1 { animation: flint-snap 300ms cubic-bezier(0.8,0,1,1) 0ms both; }
+    .flint-bar-2 { animation: flint-snap 300ms cubic-bezier(0.8,0,1,1) 40ms both; }
+    .flint-bar-3 { animation: flint-snap 300ms cubic-bezier(0.8,0,1,1) 80ms both; }
+    @keyframes flint-snap {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
+    }
+
+    /* Igniter — instant deploy */
+    .igniter-bar {
+      fill: #E8652A;
+      transform-origin: bottom center;
+      transform-box: fill-box;
+    }
+    .igniter-bar-1,
+    .igniter-bar-2,
+    .igniter-bar-3 { animation: igniter-deploy 200ms linear 0ms both; }
+    @keyframes igniter-deploy {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
+    }
+
+    /* ─── End Animated SVG Logo System ─── */
+
     /* Responsive */
     @media (max-width: 1200px) {
       .hero-code { display: none; }
@@ -439,11 +518,11 @@
 <body>
   <nav>
     <a href="#" class="logo">
-      <div class="logo-mark">
-        <div class="logo-bar"></div>
-        <div class="logo-bar"></div>
-        <div class="logo-bar"></div>
-      </div>
+      <svg width="26" height="26" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kind-ling logo">
+        <rect class="kindling-bar kindling-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
+        <rect class="kindling-bar kindling-bar-2" x="38.1" y="37.5" width="7.5" height="28.1" rx="0.625"/>
+        <rect class="kindling-bar kindling-bar-3" x="51.9" y="28.1" width="7.5" height="37.5" rx="0.625"/>
+      </svg>
       <span class="logo-text">Kind-ling</span>
     </a>
     <ul class="nav-links">
@@ -497,7 +576,13 @@
     </div>
     <div class="products-grid">
       <div class="product-card">
-        <div class="product-icon">🌿</div>
+        <div class="product-icon">
+          <svg width="48" height="48" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Twig logo">
+            <rect class="twig-bar twig-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
+            <rect class="twig-bar twig-bar-2" x="38.1" y="43.8" width="7.5" height="21.9" rx="0.625"/>
+            <rect class="twig-bar twig-bar-3" x="51.9" y="40.6" width="7.5" height="25" rx="0.625"/>
+          </svg>
+        </div>
         <h3 class="product-name">Twig</h3>
         <p class="product-tagline">Agents choose you or they don't</p>
         <p class="product-desc">Score and optimize MCP tool descriptions + A2A Agent Cards. Free audit. Paid monitoring. 15% of measured revenue increase.</p>
@@ -507,7 +592,13 @@
         </div>
       </div>
       <div class="product-card">
-        <div class="product-icon">🔥</div>
+        <div class="product-icon">
+          <svg width="48" height="48" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heat logo">
+            <rect class="heat-bar heat-bar-1" x="24.4" y="50" width="7.5" height="15.6" rx="0.625"/>
+            <rect class="heat-bar heat-bar-2" x="38.1" y="40.6" width="7.5" height="25" rx="0.625"/>
+            <rect class="heat-bar heat-bar-3" x="51.9" y="21.9" width="7.5" height="43.75" rx="0.625"/>
+          </svg>
+        </div>
         <h3 class="product-name">Heat</h3>
         <p class="product-tagline">Reputation oracle</p>
         <p class="product-desc">Route tasks to proven services, verify agent callers, compose workflows. Dual-graph: Moltbook social + x402 economic.</p>
@@ -517,7 +608,13 @@
         </div>
       </div>
       <div class="product-card">
-        <div class="product-icon">🪨</div>
+        <div class="product-icon">
+          <svg width="48" height="48" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Flint logo">
+            <rect class="flint-bar flint-bar-1" x="24.4" y="50" width="7.5" height="15.6" rx="0.625"/>
+            <rect class="flint-bar flint-bar-2" x="38.1" y="48.4" width="7.5" height="17.2" rx="0.625"/>
+            <rect class="flint-bar flint-bar-3" x="51.9" y="28.1" width="7.5" height="37.5" rx="0.625"/>
+          </svg>
+        </div>
         <h3 class="product-name">Flint</h3>
         <p class="product-tagline">Ignite agent attention</p>
         <p class="product-desc">Social growth engine for Moltbook. Build presence where agents discover each other. Dogfooding with KindSoul.</p>
@@ -527,7 +624,13 @@
         </div>
       </div>
       <div class="product-card">
-        <div class="product-icon">⚡</div>
+        <div class="product-icon">
+          <svg width="48" height="48" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Igniter logo">
+            <rect class="igniter-bar igniter-bar-1" x="24.4" y="46.9" width="8.75" height="18.75" rx="0.625"/>
+            <rect class="igniter-bar igniter-bar-2" x="38.1" y="37.5" width="8.75" height="28.1" rx="0.625"/>
+            <rect class="igniter-bar igniter-bar-3" x="51.9" y="28.1" width="8.75" height="37.5" rx="0.625"/>
+          </svg>
+        </div>
         <h3 class="product-name">Igniter</h3>
         <p class="product-tagline">Ship in 5 minutes</p>
         <p class="product-desc">x402 + MCP + A2A scaffolding for any service. Payment middleware, Agent Cards, tool definitions. All economics disclosed.</p>
@@ -679,11 +782,11 @@
     <div class="footer-content">
       <div class="footer-brand">
         <a href="#" class="logo">
-          <div class="logo-mark">
-            <div class="logo-bar"></div>
-            <div class="logo-bar"></div>
-            <div class="logo-bar"></div>
-          </div>
+          <svg width="26" height="26" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kind-ling logo">
+            <rect class="kindling-bar kindling-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
+            <rect class="kindling-bar kindling-bar-2" x="38.1" y="37.5" width="7.5" height="28.1" rx="0.625"/>
+            <rect class="kindling-bar kindling-bar-3" x="51.9" y="28.1" width="7.5" height="37.5" rx="0.625"/>
+          </svg>
           <span class="logo-text">Kind-ling</span>
         </a>
         <p>Agent SEO for the agent economy. Built by Permanent Upper Class.</p>
