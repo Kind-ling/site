@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twig — Kind-ling</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='20 24 44 46'%3E%3Crect x='24.4' y='46.9' width='7.5' height='18.75' rx='0.625' fill='%23E8652A'/%3E%3Crect x='38.1' y='37.5' width='7.5' height='28.1' rx='0.625' fill='%23E8652A'/%3E%3Crect x='51.9' y='28.1' width='7.5' height='37.5' rx='0.625' fill='%23E8652A'/%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ember: #E8652A;
+      --ember-light: #F0884E;
+      --ember-glow: rgba(232, 101, 42, 0.12);
+      --ember-dim: #B84D1E;
+      --void: #08080B;
+      --ground: #0D0D11;
+      --surface-1: #131317;
+      --surface-2: #1A1A20;
+      --surface-3: #222228;
+      --border-subtle: #1E1E26;
+      --border-default: #2A2A34;
+      --border-ember: rgba(232, 101, 42, 0.25);
+      --text-primary: #EAEAEF;
+      --text-secondary: #9898AC;
+      --text-tertiary: #5E5E72;
+      --trust: #3B9ECC;
+      --growth: #5EBB6E;
+      --caution: #CCB43B;
+      --critical: #E84040;
+      --display: 'Anybody', sans-serif;
+      --body: 'Source Serif 4', serif;
+      --mono: 'IBM Plex Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--body);
+      background: var(--void);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--ground); }
+    ::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--ember-dim); }
+    ::selection { background: var(--ember); color: var(--void); }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 1.25rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, var(--void), transparent);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+    .logo-text { font-family: var(--display); font-weight: 700; font-size: 1.2rem; color: var(--text-primary); letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; letter-spacing: 0.02em; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ember); }
+    .nav-cta { font-family: var(--mono); font-size: 0.75rem; font-weight: 500; color: var(--void); background: var(--ember); padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; transition: all 0.2s; }
+    .nav-cta:hover { background: var(--ember-light); transform: translateY(-1px); }
+
+    .twig-bar { fill: #E8652A; transform-origin: bottom center; transform-box: fill-box; }
+    .twig-bar-1 { animation: twig-breathe 1200ms ease-in-out -400ms infinite; }
+    .twig-bar-2 { animation: twig-breathe 1200ms ease-in-out -200ms infinite; }
+    .twig-bar-3 { animation: twig-breathe 1200ms ease-in-out 0ms infinite; }
+    @keyframes twig-breathe { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.15); } }
+
+    .kindling-bar { fill: #E8652A; transform-origin: bottom center; transform-box: fill-box; }
+    .kindling-bar-1 { animation: kindling-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) 0ms infinite; }
+    .kindling-bar-2 { animation: kindling-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) -3867ms infinite; }
+    .kindling-bar-3 { animation: kindling-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) -3733ms infinite; }
+    @keyframes kindling-grow { 0% { transform: scaleY(0); } 15% { transform: scaleY(1); } 80% { transform: scaleY(1); } 95% { transform: scaleY(0); } 100% { transform: scaleY(0); } }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, var(--ember-glow), transparent), radial-gradient(circle at 20% 80%, rgba(232,101,42,0.05), transparent 40%);
+      pointer-events: none;
+    }
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(var(--border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.3;
+      mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black, transparent);
+      -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black, transparent);
+    }
+    .hero-content { max-width: 750px; position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
+      color: var(--ember); background: var(--ember-glow); border: 1px solid var(--border-ember);
+      padding: 0.35rem 0.75rem; border-radius: 20px; margin-bottom: 1.5rem;
+    }
+    .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--ember); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    .hero h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2.75rem,7vw,5rem); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
+    .hero h1 span { color: var(--ember); }
+    .hero-sub { font-size: 1.2rem; font-weight: 300; color: var(--text-secondary); max-width: 520px; margin-bottom: 2.5rem; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.8rem; font-weight: 500; color: var(--void); background: var(--ember); padding: 0.9rem 1.5rem; border-radius: 6px; text-decoration: none; transition: all 0.2s; }
+    .btn-primary:hover { background: var(--ember-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,101,42,0.3); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.8rem; font-weight: 500; color: var(--text-primary); background: transparent; padding: 0.9rem 1.5rem; border-radius: 6px; text-decoration: none; border: 1px solid var(--border-default); transition: all 0.2s; }
+    .btn-secondary:hover { border-color: var(--ember); color: var(--ember); }
+
+    .section { padding: 6rem 3rem; }
+    .section.alt { background: var(--ground); }
+    .section-inner { max-width: 900px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 0.7rem; font-weight: 500; color: var(--ember); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .section-inner h2 { font-family: var(--display); font-weight: 700; font-size: clamp(1.75rem,4vw,2.5rem); margin-bottom: 2rem; }
+
+    .bullets { list-style: none; display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2rem; }
+    .bullets li { display: flex; gap: 1rem; align-items: flex-start; font-size: 1.05rem; color: var(--text-secondary); font-weight: 300; }
+    .bullets li::before { content: '→'; color: var(--ember); font-family: var(--mono); flex-shrink: 0; margin-top: 0.05em; }
+
+    .terminal {
+      background: var(--ground);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .terminal-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1rem;
+      background: var(--surface-1);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #ff5f57; }
+    .dot.y { background: #ffbd2e; }
+    .dot.g { background: #28ca42; }
+    .terminal-title { font-family: var(--mono); font-size: 0.65rem; color: var(--text-tertiary); margin-left: auto; }
+    .terminal-body { padding: 1.5rem; font-family: var(--mono); font-size: 0.8rem; line-height: 1.9; white-space: pre; overflow-x: auto; }
+    .c { color: var(--text-tertiary); }
+    .k { color: var(--trust); }
+    .s { color: var(--growth); }
+    .n { color: var(--ember); }
+    .p { color: var(--caution); }
+
+    .endpoints-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.82rem; }
+    .endpoints-table th { text-align: left; padding: 0.75rem 1rem; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); border-bottom: 1px solid var(--border-default); }
+    .endpoints-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: middle; }
+    .endpoints-table tr:last-child td { border-bottom: none; }
+    .endpoints-table tr:hover td { background: var(--surface-2); }
+    .ep-path { color: var(--ember); }
+    .ep-method { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--ember-glow); color: var(--ember); }
+    .ep-method.get { background: rgba(59,158,204,0.12); color: var(--trust); }
+    .ep-price { font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(94,187,110,0.12); color: var(--growth); }
+
+    footer { padding: 3.5rem 3rem 1.5rem; background: var(--ground); border-top: 1px solid var(--border-subtle); }
+    .footer-content { display: flex; justify-content: space-between; align-items: flex-start; max-width: 1100px; margin: 0 auto 3rem; }
+    .footer-brand { max-width: 280px; }
+    .footer-brand .logo { margin-bottom: 0.75rem; }
+    .footer-brand p { font-size: 0.85rem; color: var(--text-tertiary); font-weight: 300; }
+    .footer-links { display: flex; gap: 3.5rem; }
+    .footer-col h4 { font-family: var(--mono); font-size: 0.65rem; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.85rem; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 0.4rem; }
+    .footer-col a { font-size: 0.85rem; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--ember); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); max-width: 1100px; margin: 0 auto; }
+    .footer-bottom p { font-family: var(--mono); font-size: 0.7rem; color: var(--text-tertiary); }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--ember); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero, .section { padding: 4.5rem 1.5rem; }
+      .footer-content { flex-direction: column; gap: 2.5rem; }
+      .footer-links { flex-wrap: wrap; gap: 1.75rem; }
+      .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
+      .terminal-body { font-size: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">
+      <svg width="36" height="36" viewBox="20 24 44 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kind-ling logo">
+        <rect class="kindling-bar kindling-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
+        <rect class="kindling-bar kindling-bar-2" x="38.1" y="37.5" width="7.5" height="28.1" rx="0.625"/>
+        <rect class="kindling-bar kindling-bar-3" x="51.9" y="28.1" width="7.5" height="37.5" rx="0.625"/>
+      </svg>
+      <span class="logo-text">Kind-ling</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Products</a></li>
+      <li><a href="https://kind-ling.github.io/twig/">Docs</a></li>
+      <li><a href="https://github.com/Kind-ling">GitHub</a></li>
+    </ul>
+    <a href="https://github.com/Kind-ling/twig" class="nav-cta">GitHub</a>
+  </nav>
+
+  <section class="hero">
+    <div class="grid-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <svg width="20" height="20" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+          <rect class="twig-bar twig-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
+          <rect class="twig-bar twig-bar-2" x="38.1" y="43.8" width="7.5" height="21.9" rx="0.625"/>
+          <rect class="twig-bar twig-bar-3" x="51.9" y="40.6" width="7.5" height="25" rx="0.625"/>
+        </svg>
+        Twig · MCP Score API
+      </div>
+      <h1>Score and <span>optimize</span><br>for the agent economy.</h1>
+      <p class="hero-sub">Score and optimize MCP server descriptions for the agent economy. F–A+ grades. Free to use.</p>
+      <div class="hero-actions">
+        <a href="https://twig.kind-ling.com/health" class="btn-primary">Try the API →</a>
+        <a href="https://kind-ling.github.io/twig/" class="btn-secondary">View docs →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="section-inner">
+      <div class="section-label">What it does</div>
+      <h2>Agents decide in milliseconds. Make sure they choose you.</h2>
+      <ul class="bullets">
+        <li>Score any MCP server from F to A+ based on description clarity, tool naming, and agent-routing signal</li>
+        <li>Monitor quality over time — track how your scores change as your server evolves</li>
+        <li>Optimize descriptions for agent routing — get actionable suggestions for every issue found</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">API Example</div>
+      <h2>One call. Instant insight.</h2>
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span class="terminal-title">terminal</span>
+        </div>
+        <div class="terminal-body"><span class="c"># Analyze any MCP server</span>
+<span class="k">curl</span> -X POST https://twig.kind-ling.com/analyze \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"url": "https://your-server.com/mcp"}'</span>
+
+<span class="c"># Response</span>
+{
+  <span class="k">"ok"</span>: <span class="n">true</span>,
+  <span class="k">"url"</span>: <span class="s">"https://your-server.com/mcp"</span>,
+  <span class="k">"output"</span>: <span class="s">"Score: 72/100 (C)\n3 issues found..."</span>
+}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="section-inner">
+      <div class="section-label">Endpoints</div>
+      <h2>All endpoints are free.</h2>
+      <div class="terminal" style="background:var(--surface-1)">
+        <table class="endpoints-table">
+          <thead>
+            <tr>
+              <th>Endpoint</th>
+              <th>Method</th>
+              <th>Description</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ep-path">/health</td>
+              <td><span class="ep-method get">GET</span></td>
+              <td>Service status</td>
+              <td><span class="ep-price">Free</span></td>
+            </tr>
+            <tr>
+              <td class="ep-path">/analyze</td>
+              <td><span class="ep-method">POST</span></td>
+              <td>Score an MCP server</td>
+              <td><span class="ep-price">Free</span></td>
+            </tr>
+            <tr>
+              <td class="ep-path">/optimize</td>
+              <td><span class="ep-method">POST</span></td>
+              <td>Generate optimized variants</td>
+              <td><span class="ep-price">Free</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-family:var(--mono);font-size:0.75rem;color:var(--text-tertiary);margin-top:1rem;">Base URL: <span style="color:var(--ember)">https://twig.kind-ling.com</span></p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <svg width="36" height="36" viewBox="20 24 44 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kind-ling logo">
+            <rect class="kindling-bar kindling-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
+            <rect class="kindling-bar kindling-bar-2" x="38.1" y="37.5" width="7.5" height="28.1" rx="0.625"/>
+            <rect class="kindling-bar kindling-bar-3" x="51.9" y="28.1" width="7.5" height="37.5" rx="0.625"/>
+          </svg>
+          <span class="logo-text">Kind-ling</span>
+        </a>
+        <p>Agent SEO for the agent economy. Built by Permanent Upper Class.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Products</h4>
+          <ul>
+            <li><a href="twig.html">Twig</a></li>
+            <li><a href="heat.html">Heat</a></li>
+            <li><a href="https://github.com/Kind-ling/docs/blob/main/flint.md">Flint</a></li>
+            <li><a href="igniter.html">Igniter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Docs</h4>
+          <ul>
+            <li><a href="https://kind-ling.github.io/twig/">Twig Docs</a></li>
+            <li><a href="https://github.com/Kind-ling/docs/blob/main/architecture.md">Architecture</a></li>
+            <li><a href="https://github.com/Kind-ling/docs/blob/main/economics.md">Economics</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="https://github.com/Kind-ling">GitHub</a></li>
+            <li><a href="index.html">← All Products</a></li>
+            <li><a href="https://permanentupperclass.com">PUC</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>MIT License · Built by <a href="https://permanentupperclass.com">Permanent Upper Class</a></p>
+      <p><a href="https://twitter.com/zozDOTeth">@zozDOTeth</a></p>
+    </div>
+  </footer>
+</body>
+</html>
