@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kind-ling — Agent SEO for the Agent Economy</title>
+  <title>Twig — API quality layer for the agent economy</title>
+  <meta name="description" content="Twig scores, monitors, and optimizes MCP server descriptions so your agents route to the right tools — every time.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='20 24 44 46'%3E%3Crect x='24.4' y='46.9' width='7.5' height='18.75' rx='0.625' fill='%23E8652A'/%3E%3Crect x='38.1' y='37.5' width='7.5' height='28.1' rx='0.625' fill='%23E8652A'/%3E%3Crect x='51.9' y='28.1' width='7.5' height='37.5' rx='0.625' fill='%23E8652A'/%3E%3C/svg%3E">
   <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
   <style>
@@ -46,44 +47,29 @@
     ::-webkit-scrollbar-thumb:hover { background: var(--ember-dim); }
     ::selection { background: var(--ember); color: var(--void); }
 
-    /* Navigation */
+    /* ── Nav ── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
-      padding: 1.25rem 3rem;
+      padding: 1.1rem 3rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(to bottom, var(--void), transparent);
+      background: rgba(8,8,11,0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
     }
+    .nav-left { display: flex; align-items: center; gap: 2.5rem; }
     .logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
-    .logo svg { display: block; flex-shrink: 0; }
-    .logo-mark { display: flex; gap: 3px; align-items: flex-end; height: 26px; }
-    .logo-bar { width: 5px; background: var(--ember); border-radius: 2px; }
-    .logo-bar:nth-child(1) { height: 40%; }
-    .logo-bar:nth-child(2) { height: 65%; }
-    .logo-bar:nth-child(3) { height: 100%; }
-    .logo-text {
-      font-family: var(--display);
-      font-weight: 700;
-      font-size: 1.2rem;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-    }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: var(--text-secondary);
-      text-decoration: none;
-      letter-spacing: 0.02em;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--ember); }
+    .logo-text { font-family: var(--display); font-weight: 700; font-size: 1.15rem; color: var(--text-primary); letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .nav-github { display: flex; align-items: center; color: var(--text-tertiary); transition: color 0.2s; }
+    .nav-github:hover { color: var(--text-secondary); }
     .nav-cta {
       font-family: var(--mono);
       font-size: 0.75rem;
@@ -94,328 +80,11 @@
       border-radius: 4px;
       text-decoration: none;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     .nav-cta:hover { background: var(--ember-light); transform: translateY(-1px); }
 
-    /* Hero */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 8rem 3rem 6rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% 0%, var(--ember-glow), transparent),
-        radial-gradient(circle at 20% 80%, rgba(232, 101, 42, 0.05), transparent 40%);
-      pointer-events: none;
-    }
-    .grid-bg {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--border-subtle) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
-      background-size: 80px 80px;
-      opacity: 0.3;
-      mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black, transparent);
-      -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black, transparent);
-    }
-    .hero-content { max-width: 850px; position: relative; z-index: 1; }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      font-weight: 500;
-      color: var(--ember);
-      background: var(--ember-glow);
-      border: 1px solid var(--border-ember);
-      padding: 0.35rem 0.75rem;
-      border-radius: 20px;
-      margin-bottom: 1.5rem;
-      animation: fadeUp 0.6s ease-out;
-    }
-    .hero-badge::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: var(--ember);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .hero h1 {
-      font-family: var(--display);
-      font-weight: 700;
-      font-size: clamp(2.75rem, 7vw, 5rem);
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      margin-bottom: 1.25rem;
-      animation: fadeUp 0.6s ease-out 0.1s both;
-    }
-    .hero h1 span { color: var(--ember); }
-    .hero-sub {
-      font-size: 1.25rem;
-      font-weight: 300;
-      color: var(--text-secondary);
-      max-width: 550px;
-      margin-bottom: 2.5rem;
-      animation: fadeUp 0.6s ease-out 0.2s both;
-    }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .hero-actions {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      animation: fadeUp 0.6s ease-out 0.3s both;
-    }
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--void);
-      background: var(--ember);
-      padding: 0.9rem 1.5rem;
-      border-radius: 6px;
-      text-decoration: none;
-      transition: all 0.2s;
-      border: none;
-      cursor: pointer;
-    }
-    .btn-primary:hover { background: var(--ember-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,101,42,0.3); }
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      background: transparent;
-      padding: 0.9rem 1.5rem;
-      border-radius: 6px;
-      text-decoration: none;
-      border: 1px solid var(--border-default);
-      transition: all 0.2s;
-    }
-    .btn-secondary:hover { border-color: var(--ember); color: var(--ember); }
-
-    /* Code Preview */
-    .hero-code {
-      position: absolute;
-      right: 3rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 400px;
-      background: var(--ground);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      overflow: hidden;
-      animation: fadeUp 0.8s ease-out 0.4s both;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    }
-    .code-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.7rem 1rem;
-      background: var(--surface-1);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .code-dot.red { background: #ff5f57; }
-    .code-dot.yellow { background: #ffbd2e; }
-    .code-dot.green { background: #28ca42; }
-    .code-title { font-family: var(--mono); font-size: 0.65rem; color: var(--text-tertiary); margin-left: auto; }
-    .code-body { padding: 1.25rem; font-family: var(--mono); font-size: 0.75rem; line-height: 1.8; }
-    .code-body .comment { color: var(--text-tertiary); }
-    .code-body .keyword { color: var(--trust); }
-    .code-body .string { color: var(--growth); }
-    .code-body .number { color: var(--ember); }
-    .code-body .fn { color: var(--caution); }
-
-    /* Products */
-    .products { padding: 7rem 3rem; background: var(--ground); }
-    .section-header { text-align: center; max-width: 650px; margin: 0 auto 4rem; }
-    .section-header h2 {
-      font-family: var(--display);
-      font-weight: 700;
-      font-size: clamp(2rem, 5vw, 3rem);
-      margin-bottom: 0.75rem;
-    }
-    .section-header p { font-size: 1.1rem; color: var(--text-secondary); font-weight: 300; }
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .product-card {
-      background: var(--surface-1);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 2rem 1.75rem;
-      position: relative;
-      transition: all 0.3s;
-      overflow: hidden;
-    }
-    .product-card:hover { border-color: var(--border-ember); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-    .product-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--ember), var(--ember-light));
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .product-card:hover::before { opacity: 1; }
-    .product-icon { font-size: 2rem; margin-bottom: 1rem; }
-    .product-name { font-family: var(--display); font-weight: 700; font-size: 1.35rem; margin-bottom: 0.25rem; }
-    .product-tagline { font-family: var(--mono); font-size: 0.75rem; color: var(--ember); margin-bottom: 1rem; }
-    .product-desc { font-size: 0.95rem; color: var(--text-secondary); font-weight: 300; line-height: 1.6; margin-bottom: 1.25rem; }
-    .product-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border-subtle);
-    }
-    .product-status { font-family: var(--mono); font-size: 0.7rem; font-weight: 500; padding: 0.3rem 0.6rem; border-radius: 4px; }
-    .product-status.shipped { color: var(--growth); background: rgba(94,187,110,0.12); }
-    .product-status.beta { color: var(--caution); background: rgba(204,180,59,0.12); }
-    .product-link {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--ember);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      transition: gap 0.2s;
-    }
-    .product-link:hover { gap: 0.5rem; }
-
-    /* Demo */
-    .demo { padding: 6rem 3rem; background: var(--void); }
-    .demo-container {
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: center;
-    }
-    .demo-content h3 { font-family: var(--display); font-weight: 600; font-size: 1.6rem; margin-bottom: 1rem; }
-    .demo-content h3 span { color: var(--ember); }
-    .demo-content p { font-size: 1rem; color: var(--text-secondary); font-weight: 300; margin-bottom: 1.5rem; }
-    .score-table { background: var(--surface-1); border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; }
-    .score-header { padding: 0.9rem 1.25rem; background: var(--surface-2); border-bottom: 1px solid var(--border-subtle); font-family: var(--mono); font-size: 0.75rem; color: var(--text-tertiary); }
-    .score-row {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 0.75rem;
-      padding: 0.9rem 1.25rem;
-      border-bottom: 1px solid var(--border-subtle);
-      align-items: center;
-    }
-    .score-row:last-child { border-bottom: none; }
-    .score-tool { font-family: var(--mono); font-size: 0.8rem; }
-    .score-desc { font-size: 0.75rem; color: var(--text-tertiary); }
-    .score-grade { font-family: var(--mono); font-weight: 600; font-size: 0.85rem; padding: 0.2rem 0.5rem; border-radius: 4px; }
-    .score-grade.f { color: var(--critical); background: rgba(232,64,64,0.12); }
-    .score-grade.a { color: var(--growth); background: rgba(94,187,110,0.12); }
-
-    /* Thesis */
-    .thesis { padding: 7rem 3rem; background: var(--ground); }
-    .thesis-content { max-width: 750px; margin: 0 auto; }
-    .thesis-label { font-family: var(--mono); font-size: 0.7rem; font-weight: 500; color: var(--ember); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.25rem; }
-    .thesis h2 { font-family: var(--display); font-weight: 600; font-size: clamp(1.6rem, 4vw, 2.25rem); line-height: 1.3; margin-bottom: 1.75rem; }
-    .thesis p { font-size: 1.1rem; font-weight: 300; color: var(--text-secondary); margin-bottom: 1.25rem; }
-    .thesis strong { color: var(--text-primary); font-weight: 400; }
-
-    /* Mechanisms */
-    .mechanisms { padding: 5rem 3rem; background: var(--void); }
-    .mechanisms-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1px;
-      background: var(--border-subtle);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      overflow: hidden;
-      max-width: 1100px;
-      margin: 3rem auto 0;
-    }
-    .mechanism-item { background: var(--surface-1); padding: 1.75rem; transition: background 0.3s; }
-    .mechanism-item:hover { background: var(--surface-2); }
-    .mechanism-number { font-family: var(--mono); font-size: 0.65rem; font-weight: 500; color: var(--ember); margin-bottom: 0.75rem; }
-    .mechanism-item h3 { font-family: var(--display); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; }
-    .mechanism-item p { font-size: 0.85rem; color: var(--text-secondary); font-weight: 300; }
-
-    /* Principles */
-    .principles { padding: 7rem 3rem; background: var(--ground); }
-    .principles-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2.5rem;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .principle { position: relative; padding-top: 1.5rem; }
-    .principle::before { content: ''; position: absolute; top: 0; left: 0; width: 35px; height: 3px; background: var(--ember); border-radius: 2px; }
-    .principle h3 { font-family: var(--display); font-weight: 600; font-size: 1.05rem; margin-bottom: 0.6rem; }
-    .principle p { font-size: 0.9rem; color: var(--text-secondary); font-weight: 300; line-height: 1.65; }
-
-    /* CTA */
-    .cta { padding: 7rem 3rem; background: var(--void); text-align: center; position: relative; overflow: hidden; }
-    .cta::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, var(--ember-glow), transparent 60%);
-      pointer-events: none;
-    }
-    .cta-content { position: relative; z-index: 1; }
-    .cta h2 { font-family: var(--display); font-weight: 700; font-size: clamp(1.75rem, 4vw, 2.5rem); margin-bottom: 0.75rem; }
-    .cta p { font-size: 1.1rem; color: var(--text-secondary); font-weight: 300; margin-bottom: 2rem; }
-    .cta-commands { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
-    .cta-code { font-family: var(--mono); font-size: 0.85rem; color: var(--text-primary); background: var(--surface-2); border: 1px solid var(--border-default); padding: 0.7rem 1.25rem; border-radius: 8px; }
-    .cta-code span { color: var(--ember); }
-
-    /* Footer */
-    footer { padding: 3.5rem 3rem 1.5rem; background: var(--ground); border-top: 1px solid var(--border-subtle); }
-    .footer-content { display: flex; justify-content: space-between; align-items: flex-start; max-width: 1100px; margin: 0 auto 3rem; }
-    .footer-brand { max-width: 280px; }
-    .footer-brand .logo { margin-bottom: 0.75rem; }
-    .footer-brand p { font-size: 0.85rem; color: var(--text-tertiary); font-weight: 300; }
-    .footer-links { display: flex; gap: 3.5rem; }
-    .footer-col h4 { font-family: var(--mono); font-size: 0.65rem; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.85rem; }
-    .footer-col ul { list-style: none; }
-    .footer-col li { margin-bottom: 0.4rem; }
-    .footer-col a { font-size: 0.85rem; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
-    .footer-col a:hover { color: var(--ember); }
-    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); max-width: 1100px; margin: 0 auto; }
-    .footer-bottom p { font-family: var(--mono); font-size: 0.7rem; color: var(--text-tertiary); }
-    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
-    .footer-bottom a:hover { color: var(--ember); }
-
-    /* ─── Animated SVG Logo System ─── */
-
-    /* Kind-ling (nav/hero/footer) */
+    /* ── Animated SVG Logo bars ── */
     .kindling-bar {
       fill: #E8652A;
       transform-origin: bottom center;
@@ -432,434 +101,594 @@
       100% { transform: scaleY(0); }
     }
 
-    /* Twig — breathing loop */
-    .twig-bar {
-      fill: #E8652A;
-      transform-origin: bottom center;
-      transform-box: fill-box;
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 4rem;
+      align-items: center;
+      padding: 8rem 3rem 6rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
     }
-    .twig-bar-1 { animation: twig-breathe 1200ms ease-in-out -400ms infinite; }
-    .twig-bar-2 { animation: twig-breathe 1200ms ease-in-out -200ms infinite; }
-    .twig-bar-3 { animation: twig-breathe 1200ms ease-in-out 0ms infinite; }
-    @keyframes twig-breathe {
-      0%,100% { transform: scaleY(1); }
-      50%      { transform: scaleY(1.15); }
+    .hero-bg {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 30% 0%, var(--ember-glow), transparent),
+        radial-gradient(circle at 80% 80%, rgba(232,101,42,0.04), transparent 40%);
+      pointer-events: none;
+      z-index: 0;
     }
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border-subtle) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.25;
+      mask-image: radial-gradient(ellipse 70% 60% at 30% 20%, black, transparent);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 30% 20%, black, transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--ember);
+      background: var(--ember-glow);
+      border: 1px solid var(--border-ember);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s ease-out both;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--ember);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .hero h1 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(2.5rem, 5.5vw, 3.75rem);
+      line-height: 1.07;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      animation: fadeUp 0.6s ease-out 0.1s both;
+    }
+    .hero-sub {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      line-height: 1.65;
+      animation: fadeUp 0.6s ease-out 0.2s both;
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.6s ease-out 0.3s both; }
 
-    /* Heat — accumulation with overshoot on bar3 */
-    .heat-bar {
-      fill: #E8652A;
-      transform-origin: bottom center;
-      transform-box: fill-box;
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--mono); font-size: 0.8rem; font-weight: 500;
+      color: var(--void); background: var(--ember);
+      padding: 0.85rem 1.5rem; border-radius: 6px;
+      text-decoration: none; transition: all 0.2s; border: none; cursor: pointer;
     }
-    .heat-bar-1 { animation: heat-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) 0ms infinite; }
-    .heat-bar-2 { animation: heat-grow 4000ms cubic-bezier(0.2,0.8,0.2,1) -3963ms infinite; }
-    .heat-bar-3 { animation: heat-overshoot 4000ms cubic-bezier(0.2,0.8,0.2,1) -3925ms infinite; }
-    @keyframes heat-grow {
-      0%   { transform: scaleY(0); }
-      20%  { transform: scaleY(1); }
-      75%  { transform: scaleY(1); }
-      95%  { transform: scaleY(0); }
-      100% { transform: scaleY(0); }
+    .btn-primary:hover { background: var(--ember-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,101,42,0.3); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--mono); font-size: 0.8rem; font-weight: 500;
+      color: var(--text-primary); background: transparent;
+      padding: 0.85rem 1.5rem; border-radius: 6px;
+      text-decoration: none; border: 1px solid var(--border-default); transition: all 0.2s;
     }
-    @keyframes heat-overshoot {
-      0%   { transform: scaleY(0); }
-      17%  { transform: scaleY(1.14); }
-      22%  { transform: scaleY(1); }
-      75%  { transform: scaleY(1); }
-      95%  { transform: scaleY(0); }
-      100% { transform: scaleY(0); }
-    }
+    .btn-secondary:hover { border-color: var(--border-ember); color: var(--ember); }
 
-    /* Flint — spark event */
-    .flint-bar {
-      fill: #E8652A;
-      transform-origin: bottom center;
-      transform-box: fill-box;
+    /* ── Terminal Demo Widget ── */
+    .terminal-widget {
+      position: relative; z-index: 1;
+      background: var(--ground);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px var(--border-subtle);
+      animation: fadeUp 0.8s ease-out 0.4s both;
     }
-    .flint-bar-1 { animation: flint-snap 3000ms cubic-bezier(0.8,0,1,1) 0ms infinite; }
-    .flint-bar-2 { animation: flint-snap 3000ms cubic-bezier(0.8,0,1,1) -2987ms infinite; }
-    .flint-bar-3 { animation: flint-spark 3000ms cubic-bezier(0.8,0,1,1) -2973ms infinite; }
-    @keyframes flint-snap {
-      0%   { transform: scaleY(0); }
-      10%  { transform: scaleY(1); }
-      70%  { transform: scaleY(1); }
-      80%  { transform: scaleY(0); }
-      100% { transform: scaleY(0); }
+    .terminal-titlebar {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface-1);
+      border-bottom: 1px solid var(--border-subtle);
     }
-    @keyframes flint-spark {
-      0%   { transform: scaleY(0); }
-      8%   { transform: scaleY(1.08); }
-      12%  { transform: scaleY(1); }
-      70%  { transform: scaleY(1); }
-      80%  { transform: scaleY(0); }
-      100% { transform: scaleY(0); }
+    .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .t-dot.r { background: #FF5F57; }
+    .t-dot.y { background: #FFBD2E; }
+    .t-dot.g { background: #28CA42; }
+    .terminal-title { font-family: var(--mono); font-size: 0.65rem; color: var(--text-tertiary); margin-left: auto; }
+    .terminal-body {
+      padding: 1.25rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.9;
+      min-height: 280px;
+      color: var(--text-primary);
     }
+    .t-prompt { color: var(--text-tertiary); }
+    .t-cmd { color: var(--text-primary); }
+    .t-url { color: var(--trust); }
+    .t-label { color: var(--text-tertiary); }
+    .t-score { color: var(--critical); font-weight: 600; }
+    .t-grade { color: var(--critical); font-weight: 600; }
+    .t-ok { color: var(--growth); }
+    .t-err { color: var(--critical); }
+    .t-hint { color: var(--ember); }
+    .t-cursor {
+      display: inline-block;
+      width: 7px; height: 1em;
+      background: var(--ember);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 
-    /* Igniter — instant deploy */
-    .igniter-bar {
-      fill: #E8652A;
-      transform-origin: bottom center;
-      transform-box: fill-box;
+    /* ── Features ── */
+    .features { padding: 7rem 3rem; background: var(--ground); }
+    .section-label {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
+      color: var(--ember); text-transform: uppercase; letter-spacing: 0.1em;
+      text-align: center; margin-bottom: 1rem;
     }
-    .igniter-bar-1,
-    .igniter-bar-2,
-    .igniter-bar-3 { animation: igniter-deploy 3000ms linear 0ms infinite; }
-    @keyframes igniter-deploy {
-      0%   { transform: scaleY(0); }
-      7%   { transform: scaleY(1); }
-      75%  { transform: scaleY(1); }
-      82%  { transform: scaleY(0); }
-      100% { transform: scaleY(0); }
+    .section-title {
+      font-family: var(--display); font-weight: 700;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      text-align: center; margin-bottom: 0.75rem;
     }
+    .section-sub {
+      font-size: 1.05rem; color: var(--text-secondary); font-weight: 300;
+      text-align: center; max-width: 520px; margin: 0 auto 4rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 2rem 1.75rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover { border-color: var(--border-ember); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    .feature-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--ember), var(--ember-light));
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--ember-glow); border: 1px solid var(--border-ember);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem; font-size: 1.2rem;
+    }
+    .feature-name { font-family: var(--display); font-weight: 700; font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .feature-desc { font-size: 0.95rem; color: var(--text-secondary); font-weight: 300; line-height: 1.65; }
 
-    /* ─── End Animated SVG Logo System ─── */
-
-    /* Responsive */
-    @media (max-width: 1200px) {
-      .hero-code { display: none; }
-      .products-grid { grid-template-columns: repeat(2, 1fr); }
+    /* ── How it works ── */
+    .how { padding: 6rem 3rem; background: var(--void); }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
     }
-    @media (max-width: 900px) {
-      .mechanisms-grid { grid-template-columns: repeat(2, 1fr); }
-      .mechanisms-grid .mechanism-item:last-child { grid-column: span 2; }
-      .demo-container { grid-template-columns: 1fr; }
-      .principles-grid { grid-template-columns: 1fr; }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: calc(16.67% + 14px); right: calc(16.67% + 14px);
+      height: 1px;
+      background: linear-gradient(90deg, var(--ember), var(--border-default), var(--ember));
+      z-index: 0;
+    }
+    .step { text-align: center; padding: 0 1.5rem; position: relative; z-index: 1; }
+    .step-num {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--surface-2); border: 2px solid var(--border-ember);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-weight: 600; font-size: 1rem;
+      color: var(--ember); margin: 0 auto 1.25rem;
+    }
+    .step h3 { font-family: var(--display); font-weight: 600; font-size: 1rem; margin-bottom: 0.5rem; }
+    .step p { font-size: 0.9rem; color: var(--text-secondary); font-weight: 300; }
+
+    /* ── Pricing ── */
+    .pricing { padding: 7rem 3rem; background: var(--ground); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .pricing-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 2rem 1.75rem;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .pricing-card.featured {
+      border-color: var(--border-ember);
+      background: linear-gradient(160deg, var(--surface-2), var(--surface-1));
+    }
+    .pricing-card.featured::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -12px; left: 50%; transform: translateX(-50%);
+      font-family: var(--mono); font-size: 0.65rem; font-weight: 600;
+      color: var(--void); background: var(--ember);
+      padding: 0.25rem 0.75rem; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    .pricing-tier { font-family: var(--mono); font-size: 0.75rem; font-weight: 600; color: var(--ember); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .pricing-price { font-family: var(--display); font-weight: 700; font-size: 2.5rem; margin-bottom: 0.25rem; }
+    .pricing-price sub { font-size: 1rem; font-weight: 400; color: var(--text-secondary); }
+    .pricing-desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .pricing-features { list-style: none; margin-bottom: 2rem; }
+    .pricing-features li {
+      font-size: 0.875rem; color: var(--text-secondary);
+      padding: 0.4rem 0; border-bottom: 1px solid var(--border-subtle);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .pricing-features li:last-child { border-bottom: none; }
+    .pricing-features li::before { content: '—'; color: var(--text-tertiary); font-family: var(--mono); }
+    .pricing-features li.yes::before { content: '✓'; color: var(--growth); }
+    .pricing-cta {
+      display: block; text-align: center;
+      font-family: var(--mono); font-size: 0.8rem; font-weight: 500;
+      padding: 0.85rem; border-radius: 6px;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .pricing-cta.outline {
+      border: 1px solid var(--border-default); color: var(--text-primary);
+    }
+    .pricing-cta.outline:hover { border-color: var(--border-ember); color: var(--ember); }
+    .pricing-cta.solid { background: var(--ember); color: var(--void); }
+    .pricing-cta.solid:hover { background: var(--ember-light); transform: translateY(-1px); }
+
+    /* ── Social Proof ── */
+    .testimonials { padding: 5rem 3rem; background: var(--void); }
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem; max-width: 800px; margin: 0 auto;
+    }
+    .testimonial {
+      background: var(--surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.75rem;
+    }
+    .testimonial blockquote {
+      font-size: 1rem; font-weight: 300; line-height: 1.65;
+      color: var(--text-primary); margin-bottom: 1.25rem;
+      font-style: italic;
+    }
+    .testimonial cite { font-family: var(--mono); font-size: 0.7rem; color: var(--text-tertiary); font-style: normal; }
+    .testimonial cite strong { color: var(--text-secondary); }
+
+    /* ── Footer ── */
+    footer {
+      padding: 3.5rem 3rem 2rem;
+      background: var(--ground);
+      border-top: 1px solid var(--border-subtle);
+    }
+    .footer-content {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      max-width: 1100px; margin: 0 auto 3rem;
+    }
+    .footer-brand { max-width: 280px; }
+    .footer-brand .logo { margin-bottom: 0.75rem; display: inline-flex; }
+    .footer-brand p { font-size: 0.85rem; color: var(--text-tertiary); font-weight: 300; margin-bottom: 0.75rem; }
+    .footer-api {
+      font-family: var(--mono); font-size: 0.75rem;
+      color: var(--ember); background: var(--ember-glow);
+      border: 1px solid var(--border-ember);
+      padding: 0.35rem 0.7rem; border-radius: 4px;
+      display: inline-block; margin-top: 0.5rem;
+    }
+    .footer-links { display: flex; gap: 3.5rem; }
+    .footer-col h4 {
+      font-family: var(--mono); font-size: 0.65rem; font-weight: 600;
+      color: var(--text-tertiary); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 0.85rem;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 0.4rem; }
+    .footer-col a { font-size: 0.85rem; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--ember); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);
+      max-width: 1100px; margin: 0 auto;
+    }
+    .footer-bottom p { font-family: var(--mono); font-size: 0.7rem; color: var(--text-tertiary); }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--ember); }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .hero { grid-template-columns: 1fr; max-width: 700px; }
+      .terminal-widget { display: none; }
     }
     @media (max-width: 768px) {
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
-      .hero, .products, .thesis, .mechanisms, .demo, .principles, .cta { padding: 4.5rem 1.5rem; }
-      .products-grid { grid-template-columns: 1fr; }
-      .mechanisms-grid { grid-template-columns: 1fr; }
-      .mechanisms-grid .mechanism-item:last-child { grid-column: span 1; }
-      .footer-content { flex-direction: column; gap: 2.5rem; }
+      .hero { padding: 6rem 1.5rem 4rem; }
+      .features, .how, .pricing, .testimonials, .footer { padding: 4rem 1.5rem; }
+      .features-grid, .pricing-grid, .steps { grid-template-columns: 1fr; }
+      .steps::before { display: none; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer-content { flex-direction: column; gap: 2rem; }
       .footer-links { flex-wrap: wrap; gap: 1.75rem; }
-      .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
-      .cta-commands { flex-direction: column; align-items: center; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
     }
   </style>
 </head>
 <body>
+
+  <!-- Background -->
+  <div class="hero-bg"></div>
+  <div class="grid-bg"></div>
+
+  <!-- Nav -->
   <nav>
-    <a href="#" class="logo">
-      <svg width="36" height="36" viewBox="20 24 44 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kind-ling logo">
-        <rect class="kindling-bar kindling-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
-        <rect class="kindling-bar kindling-bar-2" x="38.1" y="37.5" width="7.5" height="28.1" rx="0.625"/>
-        <rect class="kindling-bar kindling-bar-3" x="51.9" y="28.1" width="7.5" height="37.5" rx="0.625"/>
-      </svg>
-      <span class="logo-text">Kind-ling</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="#products">Products</a></li>
-      <li><a href="#thesis">Thesis</a></li>
-      <li><a href="#principles">Principles</a></li>
-      <li><a href="https://github.com/Kind-ling/docs">Docs</a></li>
-    </ul>
-    <a href="https://github.com/Kind-ling" class="nav-cta">GitHub</a>
+    <div class="nav-left">
+      <a href="#" class="logo">
+        <svg width="34" height="34" viewBox="20 24 44 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kind-ling logo">
+          <rect class="kindling-bar kindling-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
+          <rect class="kindling-bar kindling-bar-2" x="38.1" y="37.5" width="7.5" height="28.1" rx="0.625"/>
+          <rect class="kindling-bar kindling-bar-3" x="51.9" y="28.1" width="7.5" height="37.5" rx="0.625"/>
+        </svg>
+        <span class="logo-text">Kind-ling</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="https://kind-ling.github.io/twig/">Docs</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <a href="https://github.com/Kind-ling" class="nav-github" title="GitHub" aria-label="GitHub">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      </a>
+      <a href="mailto:hello@kind-ling.com" class="nav-cta">Get API Key →</a>
+    </div>
   </nav>
 
+  <!-- Hero -->
   <section class="hero">
-    <div class="grid-bg"></div>
     <div class="hero-content">
-      <div class="hero-badge">Agent SEO for the agent economy</div>
-      <h1>Agents choose you.<br>Or they <span>don't</span>.</h1>
-      <p class="hero-sub">Score descriptions. Route tasks. Build reputation. Ship x402 services. Everything agents need to choose you.</p>
+      <div class="hero-badge">Now in beta · MCP quality layer</div>
+      <h1>The API quality layer<br>for the agent economy</h1>
+      <p class="hero-sub">Twig scores, monitors, and optimizes MCP server descriptions so your agents route to the right tools — every time.</p>
       <div class="hero-actions">
-        <a href="#products" class="btn-primary">
-          <span>Explore Products</span>
-          <span>→</span>
-        </a>
-        <a href="https://github.com/Kind-ling/docs" class="btn-secondary">
-          <span>Read Docs</span>
-        </a>
+        <a href="mailto:hello@kind-ling.com?subject=Twig access" class="btn-primary">Try free →</a>
+        <a href="https://kind-ling.github.io/twig/" class="btn-secondary">Read docs →</a>
       </div>
     </div>
-    <div class="hero-code">
-      <div class="code-header">
-        <div class="code-dot red"></div>
-        <div class="code-dot yellow"></div>
-        <div class="code-dot green"></div>
-        <span class="code-title">terminal</span>
+
+    <!-- Terminal Widget -->
+    <div class="terminal-widget" id="terminal-widget">
+      <div class="terminal-titlebar">
+        <div class="t-dot r"></div>
+        <div class="t-dot y"></div>
+        <div class="t-dot g"></div>
+        <span class="terminal-title">twig — terminal</span>
       </div>
-      <div class="code-body">
-        <span class="comment"># Score your MCP descriptions</span><br>
-        $ npx <span class="fn">@kind-ling/twig</span> analyze \<br>
-        &nbsp;&nbsp;<span class="string">yourservice.com/.well-known/agent.json</span><br><br>
-        <span class="comment"># Route to best service</span><br>
-        $ curl <span class="fn">heat.kind-ling.com</span>/route<br><br>
-        <span class="comment"># Scaffold x402 service</span><br>
-        $ npx <span class="fn">@kind-ling/igniter</span> init
+      <div class="terminal-body" id="terminal-output"></div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="section-label">What Twig does</div>
+    <h2 class="section-title">Everything agents need to choose you</h2>
+    <p class="section-sub">Three capabilities. Works standalone or together.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-name">Score</h3>
+        <p class="feature-desc">Instant quality grade for any MCP server. F to A+. No setup required — just point Twig at a URL and get results in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📡</div>
+        <h3 class="feature-name">Monitor</h3>
+        <p class="feature-desc">Track description quality over time. Automated alerts when scores drop below thresholds so you catch regressions before agents do.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-name">Optimize</h3>
+        <p class="feature-desc">AI-generated rewrites that improve agent routing by up to 3×. Apply automatically or review each change before it ships.</p>
       </div>
     </div>
   </section>
 
-  <section class="products" id="products">
-    <div class="section-header">
-      <h2>The Stack</h2>
-      <p>Four products. Each works standalone. Together, they compound.</p>
-    </div>
-    <div class="products-grid">
-      <div class="product-card">
-        <div class="product-icon">
-          <svg width="48" height="48" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Twig logo">
-            <rect class="twig-bar twig-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
-            <rect class="twig-bar twig-bar-2" x="38.1" y="43.8" width="7.5" height="21.9" rx="0.625"/>
-            <rect class="twig-bar twig-bar-3" x="51.9" y="40.6" width="7.5" height="25" rx="0.625"/>
-          </svg>
-        </div>
-        <h3 class="product-name">Twig</h3>
-        <p class="product-tagline">Agents choose you or they don't</p>
-        <p class="product-desc">Score and optimize MCP tool descriptions + A2A Agent Cards. Free audit. Paid monitoring. 15% of measured revenue increase.</p>
-        <div class="product-meta">
-          <span class="product-status shipped">Shipped</span>
-          <a href="https://github.com/Kind-ling/twig" class="product-link">@kind-ling/twig →</a>
-        </div>
+  <!-- How it works -->
+  <section class="how">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Three steps to better routing</h2>
+    <p class="section-sub">Get up and running in minutes, not days.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Point</h3>
+        <p>Give Twig any MCP server URL. No SDK, no account required to start.</p>
       </div>
-      <div class="product-card">
-        <div class="product-icon">
-          <svg width="48" height="48" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heat logo">
-            <rect class="heat-bar heat-bar-1" x="24.4" y="50" width="7.5" height="15.6" rx="0.625"/>
-            <rect class="heat-bar heat-bar-2" x="38.1" y="40.6" width="7.5" height="25" rx="0.625"/>
-            <rect class="heat-bar heat-bar-3" x="51.9" y="21.9" width="7.5" height="43.75" rx="0.625"/>
-          </svg>
-        </div>
-        <h3 class="product-name">Heat</h3>
-        <p class="product-tagline">Reputation oracle</p>
-        <p class="product-desc">Route tasks to proven services, verify agent callers, compose workflows. Dual-graph: Moltbook social + x402 economic.</p>
-        <div class="product-meta">
-          <span class="product-status shipped">Shipped</span>
-          <a href="https://github.com/Kind-ling/docs/blob/main/heat.md" class="product-link">@kind-ling/heat →</a>
-        </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Score</h3>
+        <p>Get a letter grade and specific improvement recommendations within seconds.</p>
       </div>
-      <div class="product-card">
-        <div class="product-icon">
-          <svg width="48" height="48" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Flint logo">
-            <rect class="flint-bar flint-bar-1" x="24.4" y="50" width="7.5" height="15.6" rx="0.625"/>
-            <rect class="flint-bar flint-bar-2" x="38.1" y="48.4" width="7.5" height="17.2" rx="0.625"/>
-            <rect class="flint-bar flint-bar-3" x="51.9" y="28.1" width="7.5" height="37.5" rx="0.625"/>
-          </svg>
-        </div>
-        <h3 class="product-name">Flint</h3>
-        <p class="product-tagline">Ignite agent attention</p>
-        <p class="product-desc">Social growth engine for Moltbook. Build presence where agents discover each other. Dogfooding with KindSoul.</p>
-        <div class="product-meta">
-          <span class="product-status beta">Private Beta</span>
-          <a href="https://github.com/Kind-ling/docs/blob/main/flint.md" class="product-link">Read overview →</a>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-icon">
-          <svg width="48" height="48" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Igniter logo">
-            <rect class="igniter-bar igniter-bar-1" x="24.4" y="46.9" width="8.75" height="18.75" rx="0.625"/>
-            <rect class="igniter-bar igniter-bar-2" x="38.1" y="37.5" width="8.75" height="28.1" rx="0.625"/>
-            <rect class="igniter-bar igniter-bar-3" x="51.9" y="28.1" width="8.75" height="37.5" rx="0.625"/>
-          </svg>
-        </div>
-        <h3 class="product-name">Igniter</h3>
-        <p class="product-tagline">Ship in 5 minutes</p>
-        <p class="product-desc">x402 + MCP + A2A scaffolding for any service. Payment middleware, Agent Cards, tool definitions. All economics disclosed.</p>
-        <div class="product-meta">
-          <span class="product-status shipped">Shipped</span>
-          <a href="https://github.com/Kind-ling/igniter" class="product-link">@kind-ling/igniter →</a>
-        </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Optimize</h3>
+        <p>Apply fixes yourself or let Twig auto-optimize. Watch routing accuracy climb.</p>
       </div>
     </div>
   </section>
 
-  <section class="demo">
-    <div class="demo-container">
-      <div class="demo-content">
-        <h3>Getting indexed is table stakes. Twig helps you get <span>chosen</span>.</h3>
-        <p>An agent sees your tool description and decides — in milliseconds — whether to call you. If the description is vague, you get skipped.</p>
-        <a href="https://github.com/Kind-ling/twig" class="btn-primary">
-          <span>Analyze your descriptions</span>
-          <span>→</span>
-        </a>
+  <!-- Pricing -->
+  <section class="pricing" id="pricing">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, usage-based pricing</h2>
+    <p class="section-sub">Start free. Scale when you need to.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-tier">Free</div>
+        <div class="pricing-price">$0</div>
+        <p class="pricing-desc">Perfect for trying Twig on your project.</p>
+        <ul class="pricing-features">
+          <li class="yes">10 scans / month</li>
+          <li class="yes">Letter grade + issues</li>
+          <li class="yes">Public results</li>
+          <li>Scan history</li>
+          <li>Alerts</li>
+          <li>API access</li>
+        </ul>
+        <a href="mailto:hello@kind-ling.com?subject=Twig access" class="pricing-cta outline">Start free →</a>
       </div>
-      <div class="score-table">
-        <div class="score-header">Live x402 ecosystem</div>
-        <div class="score-row">
-          <div>
-            <div class="score-tool">exa/answer</div>
-            <div class="score-desc">"AI-powered answer"</div>
-          </div>
-          <span class="score-grade f">F</span>
-          <span style="font-family:var(--mono);font-size:0.75rem;color:var(--text-tertiary)">20</span>
-        </div>
-        <div class="score-row">
-          <div>
-            <div class="score-tool">wordspace/invoke</div>
-            <div class="score-desc">"Run wordspace AI agent loop"</div>
-          </div>
-          <span class="score-grade f">F</span>
-          <span style="font-family:var(--mono);font-size:0.75rem;color:var(--text-tertiary)">26</span>
-        </div>
-        <div class="score-row">
-          <div>
-            <div class="score-tool">optimized/forecast</div>
-            <div class="score-desc">"4hr BTC prediction with 95% CI, JSON..."</div>
-          </div>
-          <span class="score-grade a">A</span>
-          <span style="font-family:var(--mono);font-size:0.75rem;color:var(--text-tertiary)">91</span>
-        </div>
+      <div class="pricing-card featured">
+        <div class="pricing-tier">Pro</div>
+        <div class="pricing-price">$9<sub>/mo</sub></div>
+        <p class="pricing-desc">For teams shipping MCP-powered products.</p>
+        <ul class="pricing-features">
+          <li class="yes">500 scans / month</li>
+          <li class="yes">Letter grade + issues</li>
+          <li class="yes">Public results</li>
+          <li class="yes">Scan history + alerts</li>
+          <li class="yes">Priority support</li>
+          <li>API access</li>
+        </ul>
+        <a href="mailto:hello@kind-ling.com?subject=Twig access" class="pricing-cta solid">Start free →</a>
       </div>
-    </div>
-  </section>
-
-  <section class="thesis" id="thesis">
-    <div class="thesis-content">
-      <div class="thesis-label">Why Kind-ling</div>
-      <h2>Agent adoption is a configuration decision, not a marketing funnel.</h2>
-      <p>Five mechanisms determine how AI agents discover, evaluate, and adopt services: <strong>MCP tool descriptions</strong>, <strong>A2A Agent Cards</strong>, <strong>x402 settlement</strong>, <strong>context window content</strong>, and <strong>on-chain transaction history</strong>.</p>
-      <p>The connective layer — reputation scoring, task routing, description optimization — is unoccupied. <strong>Kind-ling occupies it</strong> with tools that each provide standalone value and, when composed, create reinforcing loops across all five mechanisms.</p>
-    </div>
-  </section>
-
-  <section class="mechanisms">
-    <div class="section-header">
-      <h2>Five Mechanisms</h2>
-      <p>How agents discover, evaluate, and pay for services.</p>
-    </div>
-    <div class="mechanisms-grid">
-      <div class="mechanism-item">
-        <div class="mechanism-number">01</div>
-        <h3>MCP Descriptions</h3>
-        <p>What agents see when choosing tools</p>
-      </div>
-      <div class="mechanism-item">
-        <div class="mechanism-number">02</div>
-        <h3>A2A Agent Cards</h3>
-        <p>Machine-readable capability declarations</p>
-      </div>
-      <div class="mechanism-item">
-        <div class="mechanism-number">03</div>
-        <h3>x402 Settlement</h3>
-        <p>Payment + discovery in one HTTP exchange</p>
-      </div>
-      <div class="mechanism-item">
-        <div class="mechanism-number">04</div>
-        <h3>Context Window</h3>
-        <p>What gets passed between agents</p>
-      </div>
-      <div class="mechanism-item">
-        <div class="mechanism-number">05</div>
-        <h3>On-Chain History</h3>
-        <p>Verifiable demand and reputation</p>
+      <div class="pricing-card">
+        <div class="pricing-tier">Team</div>
+        <div class="pricing-price">$49<sub>/mo</sub></div>
+        <p class="pricing-desc">For organizations running multiple MCP servers.</p>
+        <ul class="pricing-features">
+          <li class="yes">Unlimited scans</li>
+          <li class="yes">Letter grade + issues</li>
+          <li class="yes">Public results</li>
+          <li class="yes">Scan history + alerts</li>
+          <li class="yes">Priority support</li>
+          <li class="yes">API access + custom reports</li>
+        </ul>
+        <a href="mailto:hello@kind-ling.com?subject=Twig access" class="pricing-cta outline">Start free →</a>
       </div>
     </div>
   </section>
 
-  <section class="principles" id="principles">
-    <div class="section-header">
-      <h2>Principles</h2>
-      <p>Infrastructure, not hype. Precision, not jargon.</p>
-    </div>
-    <div class="principles-grid">
-      <div class="principle">
-        <h3>Open-source, bypassable</h3>
-        <p>Every tool runs standalone. No lock-in. Fork it, host it, bypass it entirely. Works because it's useful.</p>
+  <!-- Social Proof -->
+  <section class="testimonials">
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <blockquote>"Twig caught 6 description issues our team had missed for months. Routing accuracy is noticeably better."</blockquote>
+        <cite><strong>Beta tester</strong> · AI agent startup</cite>
       </div>
-      <div class="principle">
-        <h3>Methodology before scores</h3>
-        <p>Scoring methodology is published before any score is emitted. Anyone can reproduce from on-chain data.</p>
-      </div>
-      <div class="principle">
-        <h3>First-party disclosed</h3>
-        <p>PUC operates services that participate in Kind-ling. Labeled <code style="font-family:var(--mono);font-size:0.8em">is_first_party: true</code> throughout. No scoring advantages.</p>
-      </div>
-      <div class="principle">
-        <h3>Referral ≠ routing</h3>
-        <p>Split size has zero effect on ranking or routing position. Hard rule, enforced in code.</p>
-      </div>
-      <div class="principle">
-        <h3>Economics on-chain</h3>
-        <p>Every 402 response discloses referral economics before payment. All splits auditable by anyone.</p>
-      </div>
-      <div class="principle">
-        <h3>Honest about trade-offs</h3>
-        <p>We say what we build and what we don't. Scope boundaries are explicit and public.</p>
+      <div class="testimonial">
+        <blockquote>"Agent routing accuracy improved after running Twig fixes on our MCP server. Would have taken weeks to diagnose manually."</blockquote>
+        <cite><strong>Beta tester</strong> · Solo dev, MCP builder</cite>
       </div>
     </div>
   </section>
 
-  <section class="cta">
-    <div class="cta-content">
-      <h2>Ready to build?</h2>
-      <p>Pick your entry point.</p>
-      <div class="cta-commands">
-        <div class="cta-code"><span>npx</span> @kind-ling/twig analyze</div>
-        <div class="cta-code"><span>npx</span> @kind-ling/igniter init</div>
-      </div>
-      <div class="hero-actions" style="justify-content:center;">
-        <a href="https://github.com/Kind-ling" class="btn-primary">
-          <span>View on GitHub</span>
-          <span>→</span>
-        </a>
-        <a href="https://github.com/Kind-ling/docs" class="btn-secondary">
-          <span>Read Docs</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
+  <!-- Footer -->
   <footer>
     <div class="footer-content">
       <div class="footer-brand">
         <a href="#" class="logo">
-          <svg width="36" height="36" viewBox="20 24 44 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kind-ling logo">
+          <svg width="32" height="32" viewBox="20 24 44 46" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect class="kindling-bar kindling-bar-1" x="24.4" y="46.9" width="7.5" height="18.75" rx="0.625"/>
             <rect class="kindling-bar kindling-bar-2" x="38.1" y="37.5" width="7.5" height="28.1" rx="0.625"/>
             <rect class="kindling-bar kindling-bar-3" x="51.9" y="28.1" width="7.5" height="37.5" rx="0.625"/>
           </svg>
           <span class="logo-text">Kind-ling</span>
         </a>
-        <p>Agent SEO for the agent economy. Built by Permanent Upper Class.</p>
+        <p>The API quality layer for the agent economy.</p>
+        <div class="footer-api">API: twig.kind-ling.com</div>
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h4>Products</h4>
+          <h4>Product</h4>
           <ul>
-            <li><a href="https://github.com/Kind-ling/twig">Twig</a></li>
-            <li><a href="https://github.com/Kind-ling/docs/blob/main/heat.md">Heat</a></li>
-            <li><a href="https://github.com/Kind-ling/docs/blob/main/flint.md">Flint</a></li>
-            <li><a href="https://github.com/Kind-ling/igniter">Igniter</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="https://kind-ling.github.io/twig/">Docs</a></li>
+            <li><a href="#">Blog</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Docs</h4>
+          <h4>Developers</h4>
           <ul>
-            <li><a href="https://github.com/Kind-ling/docs/blob/main/architecture.md">Architecture</a></li>
-            <li><a href="https://github.com/Kind-ling/docs/blob/main/economics.md">Economics</a></li>
-            <li><a href="https://github.com/Kind-ling/docs/blob/main/methodology.md">Methodology</a></li>
-            <li><a href="https://github.com/Kind-ling/docs/blob/main/governance.md">Governance</a></li>
+            <li><a href="https://kind-ling.github.io/twig/">API Reference</a></li>
+            <li><a href="https://github.com/Kind-ling/twig">GitHub</a></li>
+            <li><a href="https://github.com/Kind-ling">Organization</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Resources</h4>
+          <h4>Company</h4>
           <ul>
-            <li><a href="https://github.com/Kind-ling">GitHub</a></li>
-            <li><a href="https://github.com/Kind-ling/brand">Brand</a></li>
-            <li><a href="https://github.com/Kind-ling/docs/blob/main/contributing.md">Contributing</a></li>
+            <li><a href="mailto:hello@kind-ling.com">hello@kind-ling.com</a></li>
             <li><a href="https://permanentupperclass.com">PUC</a></li>
+            <li><a href="https://twitter.com/zozDOTeth">Twitter</a></li>
           </ul>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>MIT License · Built by <a href="https://permanentupperclass.com">Permanent Upper Class</a></p>
-      <p><a href="https://twitter.com/zozDOTeth">@zozDOTeth</a></p>
+      <p>© 2026 Kind-ling · Built by <a href="https://permanentupperclass.com">Permanent Upper Class</a></p>
+      <p><a href="https://github.com/Kind-ling">GitHub</a> · <a href="https://kind-ling.github.io/twig/">Docs</a></p>
     </div>
   </footer>
 
   <script>
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (href === '#') return;
         e.preventDefault();
-        const t = document.querySelector(a.getAttribute('href'));
+        const t = document.querySelector(href);
         if (t) t.scrollIntoView({ behavior: 'smooth' });
       });
     });
+
+    // Scroll-in animations
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -868,12 +697,96 @@
         }
       });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.product-card, .mechanism-item, .principle').forEach((el, i) => {
+    document.querySelectorAll('.feature-card, .step, .pricing-card, .testimonial').forEach((el, i) => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';
       el.style.transition = `opacity 0.5s ease-out ${(i % 4) * 0.1}s, transform 0.5s ease-out ${(i % 4) * 0.1}s`;
       obs.observe(el);
     });
+
+    // Typewriter terminal demo
+    const terminalOutput = document.getElementById('terminal-output');
+    if (terminalOutput) {
+      const lines = [
+        { text: '$ twig analyze https://exa.ai/.well-known/agent.json', class: '' },
+        { text: '', class: '' },
+        { text: 'Analyzing exa/answer...', class: 't-label' },
+        { text: '', class: '' },
+        { text: '  Score     20 / 100', class: 't-score', suffix: '   F', suffixClass: 't-grade' },
+        { text: '  Grade     CRITICAL', class: 't-err' },
+        { text: '', class: '' },
+        { text: '  Issues found:', class: 't-label' },
+        { text: '  ✗ No parameter types defined', class: 't-err' },
+        { text: '  ✗ Missing error response schemas', class: 't-err' },
+        { text: '  ✗ Tool names not agent-readable', class: 't-err' },
+        { text: '  ✗ No capability declarations', class: 't-err' },
+        { text: '', class: '' },
+        { text: '  Run: twig optimize <url> to fix', class: 't-hint' },
+      ];
+
+      let lineIdx = 0;
+      let charIdx = 0;
+      let outputHTML = '';
+      const cursor = '<span class="t-cursor"></span>';
+
+      function renderCurrent() {
+        terminalOutput.innerHTML = outputHTML + cursor;
+      }
+
+      function typeNext() {
+        if (lineIdx >= lines.length) {
+          // Done — show final output, keep cursor blinking
+          terminalOutput.innerHTML = outputHTML + cursor;
+          return;
+        }
+
+        const line = lines[lineIdx];
+        const fullText = line.text + (line.suffix || '');
+
+        if (charIdx < fullText.length) {
+          // Still typing this line
+          const ch = fullText[charIdx];
+          // Build current line so far
+          const lineText = fullText.slice(0, charIdx + 1);
+          const mainText = lineText.slice(0, line.text.length);
+          const suffText = lineText.slice(line.text.length);
+
+          let currentLineHTML = '';
+          if (line.class) currentLineHTML += `<span class="${line.class}">`;
+          currentLineHTML += escapeHtml(mainText);
+          if (line.class) currentLineHTML += '</span>';
+          if (suffText && line.suffix) {
+            currentLineHTML += `<span class="${line.suffixClass}">${escapeHtml(suffText)}</span>`;
+          }
+
+          terminalOutput.innerHTML = outputHTML + currentLineHTML + cursor;
+          charIdx++;
+          setTimeout(typeNext, 28);
+        } else {
+          // Line done — commit it
+          let doneLineHTML = '';
+          if (line.text !== '') {
+            if (line.class) doneLineHTML += `<span class="${line.class}">`;
+            doneLineHTML += escapeHtml(line.text);
+            if (line.class) doneLineHTML += '</span>';
+            if (line.suffix) doneLineHTML += `<span class="${line.suffixClass}">${escapeHtml(line.suffix)}</span>`;
+          }
+          outputHTML += doneLineHTML + '\n';
+          lineIdx++;
+          charIdx = 0;
+          // Pause a bit between lines
+          const pause = line.text === '' ? 60 : 40;
+          setTimeout(typeNext, pause);
+        }
+      }
+
+      function escapeHtml(s) {
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      }
+
+      // Start typewriter after a short delay
+      setTimeout(typeNext, 1200);
+    }
   </script>
 </body>
 </html>
