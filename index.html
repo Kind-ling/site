@@ -270,7 +270,7 @@
       transition: all 0.3s;
       overflow: hidden;
     }
-    .product-card:hover { border-color: var(--border-ember); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    .product-card:hover { border-color: var(--border-ember); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); cursor: pointer; }
     .product-card::before {
       content: '';
       position: absolute;
@@ -552,6 +552,8 @@
     </a>
     <ul class="nav-links">
       <li><a href="#products">Products</a></li>
+        <li><a href="twig.html">Twig</a></li>
+        <li><a href="heat.html">Heat</a></li>
       <li><a href="#thesis">Thesis</a></li>
       <li><a href="#principles">Principles</a></li>
       <li><a href="https://kind-ling.github.io/twig/">Docs</a></li>
@@ -874,6 +876,17 @@
       el.style.transition = `opacity 0.5s ease-out ${(i % 4) * 0.1}s, transform 0.5s ease-out ${(i % 4) * 0.1}s`;
       obs.observe(el);
     });
-  </script>
+  
+  // Make product cards fully clickable
+  document.querySelectorAll('.product-card').forEach(card => {
+    const link = card.querySelector('.product-link');
+    if (link && link.href) {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', (e) => {
+        if (!e.target.closest('a')) window.location.href = link.href;
+      });
+    }
+  });
+</script>
 </body>
 </html>
